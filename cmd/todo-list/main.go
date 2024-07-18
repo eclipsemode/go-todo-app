@@ -11,6 +11,8 @@ import (
 	"os/signal"
 	"syscall"
 	"todo-list/internal/config"
+	"todo-list/internal/lib/logger/sl"
+	"todo-list/internal/storage/sqlite"
 )
 
 func main() {
@@ -23,6 +25,14 @@ func main() {
 	r := gin.Default()
 
 	log := logger_pretty.NewPrettySlog()
+
+	storage, err := sqlite.New(cfg.StoragePath)
+	if err != nil {
+		log.Error("failed to init storage", sl.Err(err))
+		os.Exit(1)
+	}
+
+	_ = storage
 
 	log.Info("starting server", slog.Any("config", cfg))
 

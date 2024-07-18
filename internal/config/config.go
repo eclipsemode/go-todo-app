@@ -3,7 +3,6 @@ package config
 import (
 	"flag"
 	"github.com/ilyakaznacheev/cleanenv"
-	"log"
 	"os"
 	"time"
 )
@@ -21,8 +20,6 @@ type Config struct {
 
 func MustLoad() *Config {
 	path := fetchConfigPath()
-
-	log.Println(path)
 
 	if path == "" {
 		panic("config file path is empty")
