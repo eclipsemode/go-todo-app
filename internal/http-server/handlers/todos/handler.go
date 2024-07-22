@@ -16,13 +16,13 @@ type TodoHandler struct {
 	Log     *slog.Logger
 }
 
-func NewTodoHandler(r *gin.Engine, svc TodoService, log *slog.Logger) error {
+func NewTodoHandler(rg *gin.RouterGroup, svc TodoService, log *slog.Logger) error {
 	handler := &TodoHandler{
 		Service: svc,
 		Log:     log,
 	}
-	r.POST("/todos", handler.CreateTodoHandler)
-	r.GET("/todos", handler.GetAllTodosHandler)
+	rg.POST("/todos", handler.CreateTodoHandler)
+	rg.GET("/todos", handler.GetAllTodosHandler)
 
 	return nil
 }

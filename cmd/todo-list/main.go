@@ -38,11 +38,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	err = todos.NewTodoHandler(r, storage, log)
-	if err != nil {
-		log.Error("failed to init todo handler", sl.Err(err))
+	apiV1 := r.Group("/api/v1")
+	{
+		err = todos.NewTodoHandler(apiV1, storage, log)
+		if err != nil {
+			log.Error("failed to init todo handler", sl.Err(err))
 
-		return
+			return
+		}
 	}
 
 	log.Info("starting server", slog.Any("config", cfg))
@@ -61,6 +64,10 @@ func main() {
 		}
 	}()
 
+	gracefulShutdown(log)
+}
+
+func gracefulShutdown(log *slog.Logger) {
 	quit := make(chan os.Signal, 1)
 
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
