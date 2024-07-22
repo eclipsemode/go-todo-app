@@ -1,7 +1,13 @@
 package main
 
 import (
+	"errors"
+	"github.com/eclipsemode/go-todo-app/internal/config"
+	"github.com/eclipsemode/go-todo-app/internal/http-server/handlers/todos"
+	"github.com/eclipsemode/go-todo-app/internal/lib/logger/sl"
+	"github.com/eclipsemode/go-todo-app/internal/storage/sqlite"
 	"github.com/eclipsemode/logger-pretty"
+	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	logDefault "log"
@@ -10,9 +16,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"todo-list/internal/config"
-	"todo-list/internal/lib/logger/sl"
-	"todo-list/internal/storage/sqlite"
 )
 
 func main() {
@@ -23,6 +26,9 @@ func main() {
 	cfg := config.MustLoad()
 
 	r := gin.Default()
+	r.Use(gin.Recovery())
+	r.Use(gin.Logger())
+	r.Use(requestid.New())
 
 	log := logger_pretty.NewPrettySlog()
 
@@ -32,7 +38,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	_ = storage
+	err = todos.NewTodoHandler(r, storage, log)
+	if err != nil {
+		log.Error("failed to init todo handler", sl.Err(err))
+
+		return
+	}
 
 	log.Info("starting server", slog.Any("config", cfg))
 
@@ -45,7 +56,7 @@ func main() {
 	}
 
 	go func() {
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Error("error starting server", slog.Any("config", cfg))
 		}
 	}()

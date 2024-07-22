@@ -20,7 +20,7 @@ func New(storagePath string) (*Storage, error) {
 
 	stmt, err := db.Prepare(`
 			CREATE TABLE IF NOT EXISTS todos (
-			    id INTEGER PRIMARY KEY AUTOINCREMENT,
+			    id UUID PRIMARY KEY,
 			    title TEXT NOT NULL,
 			    description TEXT,
 			    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
