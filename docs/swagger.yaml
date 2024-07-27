@@ -1,0 +1,21 @@
+basePath: /api/v1
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:8081
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: Simple Rest Api for to do list
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: List to do API
+  version: "1.0"
+paths: {}
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

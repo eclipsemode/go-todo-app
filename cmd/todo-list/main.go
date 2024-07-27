@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	_ "github.com/eclipsemode/go-todo-app/docs"
 	"github.com/eclipsemode/go-todo-app/internal/config"
 	"github.com/eclipsemode/go-todo-app/internal/http-server/handlers/todos"
 	"github.com/eclipsemode/go-todo-app/internal/lib/logger/sl"
@@ -10,6 +11,8 @@ import (
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	logDefault "log"
 	"log/slog"
 	"net/http"
@@ -18,6 +21,25 @@ import (
 	"syscall"
 )
 
+// @title List to do API
+// @version 1.0
+// @description Simple Rest Api for to do list
+// @termOfService http://swagger.io/terms/
+
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host localhost:8081
+// @BasePath /api/v1
+
+// @securityDefinitions.basic BasicAuth
+
+// @externalDocs.description OpenAPI
+// @externalDocs.url https://swagger.io/resources/open-api/
 func main() {
 	if err := godotenv.Load(); err != nil {
 		logDefault.Fatal("Error loading .env file")
@@ -47,6 +69,7 @@ func main() {
 			return
 		}
 	}
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	log.Info("starting server", slog.Any("config", cfg))
 
