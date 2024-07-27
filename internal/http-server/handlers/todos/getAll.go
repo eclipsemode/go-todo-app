@@ -15,6 +15,17 @@ type GetAllTodosRes struct {
 	Todos []models.Todo `json:"todos"`
 }
 
+// GetAllTodosHandler godoc
+//
+//	@Summary		Show a to-do
+//	@Description	get all todos
+//	@Tags			todos
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	GetAllTodosRes "Success"
+//	@Failure		400		{object}	responseApi.Response			"Error"
+//	@Failure		500		{object}	responseApi.Response			"Error"
+//	@Router			/todos [get]
 func (t *TodoHandler) GetAllTodosHandler(ctx *gin.Context) {
 	const op = "handlers.todo.getAllTodosHandler"
 

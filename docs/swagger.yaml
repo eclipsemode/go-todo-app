@@ -1,4 +1,58 @@
 basePath: /api/v1
+definitions:
+  models.Todo:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  responseApi.Response:
+    properties:
+      error:
+        type: string
+      status:
+        type: string
+    type: object
+  todos.CreateTodoReq:
+    properties:
+      description:
+        maxLength: 100
+        type: string
+      title:
+        maxLength: 20
+        type: string
+    required:
+    - title
+    type: object
+  todos.CreateTodoRes:
+    properties:
+      description:
+        type: string
+      error:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+    type: object
+  todos.GetAllTodosRes:
+    properties:
+      error:
+        type: string
+      status:
+        type: string
+      todos:
+        items:
+          $ref: '#/definitions/models.Todo'
+        type: array
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
@@ -14,7 +68,59 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   title: List to do API
   version: "1.0"
-paths: {}
+paths:
+  /todos:
+    get:
+      consumes:
+      - application/json
+      description: get all todos
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/todos.GetAllTodosRes'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/responseApi.Response'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/responseApi.Response'
+      summary: Show a to-do
+      tags:
+      - todos
+    post:
+      consumes:
+      - application/json
+      description: create to-do
+      parameters:
+      - description: Account Info
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/todos.CreateTodoReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/todos.CreateTodoRes'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/responseApi.Response'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/responseApi.Response'
+      summary: Create to-do post method
+      tags:
+      - todos
 securityDefinitions:
   BasicAuth:
     type: basic

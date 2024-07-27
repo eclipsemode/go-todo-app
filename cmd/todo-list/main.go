@@ -69,6 +69,7 @@ func main() {
 			return
 		}
 	}
+
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	log.Info("starting server", slog.Any("config", cfg))
