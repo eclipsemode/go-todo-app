@@ -7,6 +7,13 @@ import (
 	uuidv4 "github.com/google/uuid"
 )
 
+//go:generate mockery --name TodoService
+type TodoRepo interface {
+	CreateTodo(title string, description string) (string, error)
+	GetAllTodos() ([]models.Todo, error)
+	GetTodoById(id string) (models.Todo, error)
+}
+
 // CreateTodo creates new element in storage
 func (s *Storage) CreateTodo(title string, description string) (string, error) {
 	const op = "storage.sqlite.CreateTodo"
@@ -45,6 +52,10 @@ func (s *Storage) GetAllTodos() ([]models.Todo, error) {
 	}
 
 	defer func(rows *sql.Rows) {
+		if err := rows.Close(); err != nil {
+			fmt.Printf("%s: %s\n", op, err)
+			return
+		}
 		err := rows.Close()
 		if err != nil {
 
@@ -60,4 +71,30 @@ func (s *Storage) GetAllTodos() ([]models.Todo, error) {
 	}
 
 	return todos, nil
+}
+
+func (s *Storage) GetTodoById(id string) (models.Todo, error) {
+	const op = "storage.sqlite.GetTodo"
+
+	stmt, err := s.db.Prepare("SELECT * FROM todos WHERE id=?")
+	if err != nil {
+		return models.Todo{}, fmt.Errorf("%s: %w", op, err)
+	}
+
+	row := stmt.QueryRow(id)
+
+	defer func() {
+		if err := stmt.Close(); err != nil {
+			fmt.Printf("%s: %s\n", op, err)
+			return
+		}
+	}()
+
+	var todo models.Todo
+
+	if err := row.Scan(&todo.ID, &todo.Title, &todo.Description, &todo.CreatedAt, &todo.UpdatedAt); err != nil {
+		return models.Todo{}, fmt.Errorf("%s: %w", op, err)
+	}
+
+	return todo, nil
 }

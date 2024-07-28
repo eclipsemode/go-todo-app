@@ -101,6 +101,50 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/todos/{id}": {
+            "get": {
+                "description": "get to-do by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "todos"
+                ],
+                "summary": "Get To-do by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Todos id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/todos.GetTodoRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/responseApi.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/responseApi.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -182,6 +226,20 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.Todo"
                     }
+                }
+            }
+        },
+        "todos.GetTodoRes": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "todo": {
+                    "$ref": "#/definitions/models.Todo"
                 }
             }
         }

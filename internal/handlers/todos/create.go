@@ -66,7 +66,7 @@ func (t *TodoHandler) CreateTodoHandler(ctx *gin.Context) {
 		return
 	}
 
-	_, err := t.Service.CreateTodo(req.Title, req.Description)
+	_, err := t.uCase.CreateTodo(req.Title, req.Description)
 	if errors.Is(err, storage.ErrAlreadyExists) {
 		log.Error("todo already exists", sl.Err(err))
 

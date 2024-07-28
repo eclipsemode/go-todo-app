@@ -4,7 +4,7 @@ import (
 	"errors"
 	_ "github.com/eclipsemode/go-todo-app/docs"
 	"github.com/eclipsemode/go-todo-app/internal/config"
-	"github.com/eclipsemode/go-todo-app/internal/http-server/handlers/todos"
+	"github.com/eclipsemode/go-todo-app/internal/handlers"
 	"github.com/eclipsemode/go-todo-app/internal/lib/logger/sl"
 	"github.com/eclipsemode/go-todo-app/internal/storage/sqlite"
 	"github.com/eclipsemode/logger-pretty"
@@ -60,14 +60,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	apiV1 := r.Group("/api/v1")
-	{
-		err = todos.NewTodoHandler(apiV1, storage, log)
-		if err != nil {
-			log.Error("failed to init todo handler", sl.Err(err))
-
-			return
-		}
+	_, err = handlers.RouterGroup(r, log, storage)
+	if err != nil {
+		log.Error("failed to init api v1", sl.Err(err))
+		os.Exit(1)
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

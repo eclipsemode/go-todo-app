@@ -27,14 +27,14 @@ type GetAllTodosRes struct {
 //	@Failure		500		{object}	responseApi.Response			"Error"
 //	@Router			/todos [get]
 func (t *TodoHandler) GetAllTodosHandler(ctx *gin.Context) {
-	const op = "handlers.todo.getAllTodosHandler"
+	const op = "handlers.todos.getAllTodosHandler"
 
 	log := t.Log.With(
 		slog.String("operation", op),
 		slog.String("request_id", requestid.Get(ctx)),
 	)
 
-	todos, err := t.Service.GetAllTodos()
+	todos, err := t.uCase.GetAllTodos()
 	if err != nil {
 		log.Error("error getting todos", sl.Err(err))
 
@@ -43,11 +43,13 @@ func (t *TodoHandler) GetAllTodosHandler(ctx *gin.Context) {
 		return
 	}
 
-	GetAllTodosResCreated(ctx, todos)
+	log.Info("success getting all todos", slog.Any("todos", todos))
+
+	responseGetAllTodos(ctx, todos)
 }
 
-func GetAllTodosResCreated(ctx *gin.Context, todos []models.Todo) {
-	ctx.IndentedJSON(http.StatusCreated, GetAllTodosRes{
+func responseGetAllTodos(ctx *gin.Context, todos []models.Todo) {
+	ctx.IndentedJSON(http.StatusOK, GetAllTodosRes{
 		Response: responseApi.Ok(),
 		Todos:    todos,
 	})
