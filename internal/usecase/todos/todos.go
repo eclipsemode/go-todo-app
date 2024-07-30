@@ -24,3 +24,7 @@ func (uc *Usecase) GetAllTodos() ([]models.Todo, error) {
 func (uc *Usecase) GetTodoById(id string) (models.Todo, error) {
 	return uc.Repo.GetTodoById(id)
 }
+
+func (uc *Usecase) DeleteTodoById(id string) error {
+	return uc.Repo.DeleteTodoById(id)
+}

@@ -23,6 +23,7 @@ func NewTodoHandler(rg *gin.RouterGroup, svc sqlite.TodoRepo, log *slog.Logger) 
 	rg.POST("/todos", handler.CreateTodoHandler)
 	rg.GET("/todos", handler.GetAllTodosHandler)
 	rg.GET("/todos/:id", handler.GetTodoById)
+	rg.DELETE("/todos/:id", handler.DeleteTodoById)
 
 	return nil
 }

@@ -12,6 +12,7 @@ type TodoRepo interface {
 	CreateTodo(title string, description string) (string, error)
 	GetAllTodos() ([]models.Todo, error)
 	GetTodoById(id string) (models.Todo, error)
+	DeleteTodoById(id string) error
 }
 
 // CreateTodo creates new element in storage
@@ -97,4 +98,26 @@ func (s *Storage) GetTodoById(id string) (models.Todo, error) {
 	}
 
 	return todo, nil
+}
+
+func (s *Storage) DeleteTodoById(id string) error {
+	const op = "storage.sqlite.DeleteTodo"
+
+	stmt, err := s.db.Prepare("DELETE FROM todos WHERE id=?")
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	defer func() {
+		if err := stmt.Close(); err != nil {
+			fmt.Printf("%s: %s\n", op, err)
+			return
+		}
+	}()
+
+	_, err = stmt.Exec(id)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
 }
