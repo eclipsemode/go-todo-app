@@ -8,22 +8,23 @@ import (
 )
 
 type TodoHandler struct {
-	uCase *uc_todos.Usecase
+	UCase *ucTodos.Usecase
 	Log   *slog.Logger
 }
 
 func NewTodoHandler(rg *gin.RouterGroup, svc sqlite.TodoRepo, log *slog.Logger) error {
 
-	ucaseTodos := uc_todos.New(svc)
+	uCaseTodos := ucTodos.New(svc)
 
 	handler := &TodoHandler{
-		uCase: ucaseTodos,
+		UCase: uCaseTodos,
 		Log:   log,
 	}
-	rg.POST("/todos", handler.CreateTodoHandler)
-	rg.GET("/todos", handler.GetAllTodosHandler)
-	rg.GET("/todos/:id", handler.GetTodoById)
-	rg.DELETE("/todos/:id", handler.DeleteTodoById)
+	rg.POST("/todos", handler.createTodoHandler)
+	rg.GET("/todos", handler.getAllTodosHandler)
+	rg.GET("/todos/:id", handler.getTodoById)
+	rg.DELETE("/todos/:id", handler.deleteTodoById)
+	rg.PUT("/todos/:id", handler.updateTodoHandler)
 
 	return nil
 }

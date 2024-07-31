@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-type GetTodoRes struct {
+type getTodoRes struct {
 	responseApi.Response
 	Todo models.Todo `json:"todo"`
 }
@@ -23,11 +23,11 @@ type GetTodoRes struct {
 //	@Accept			json
 //	@Produce		json
 //	@Param			id	path		string		true	"Todos id"
-//	@Success		200	{object}	GetTodoRes "Success"
+//	@Success		200	{object}	getTodoRes "Success"
 //	@Failure		400		{object}	responseApi.Response			"Error"
 //	@Failure		500		{object}	responseApi.Response			"Error"
 //	@Router			/todos/{id} [get]
-func (t *TodoHandler) GetTodoById(ctx *gin.Context) {
+func (t *TodoHandler) getTodoById(ctx *gin.Context) {
 	const op = "handlers.todos.getTodoById"
 
 	id := ctx.Param("id")
@@ -37,7 +37,7 @@ func (t *TodoHandler) GetTodoById(ctx *gin.Context) {
 		slog.String("request_id", requestid.Get(ctx)),
 	)
 
-	todo, err := t.uCase.GetTodoById(id)
+	todo, err := t.UCase.GetTodoById(id)
 	if err != nil {
 		log.Error("error getting todo", sl.Err(err))
 
@@ -53,7 +53,7 @@ func (t *TodoHandler) GetTodoById(ctx *gin.Context) {
 }
 
 func responseGetTodoById(ctx *gin.Context, todo models.Todo) {
-	ctx.IndentedJSON(http.StatusOK, GetTodoRes{
+	ctx.IndentedJSON(http.StatusOK, getTodoRes{
 		Response: responseApi.Ok(),
 		Todo:     todo,
 	})

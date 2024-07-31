@@ -12,12 +12,12 @@ import (
 	"net/http"
 )
 
-type CreateTodoReq struct {
+type createTodoReq struct {
 	Title       string `json:"title" validate:"required,max=20"`
 	Description string `json:"description,omitempty" validate:"max=100"`
 }
 
-type CreateTodoRes struct {
+type createTodoRes struct {
 	responseApi.Response
 	Title       string `json:"title"`
 	Description string `json:"description,omitempty"`
@@ -30,20 +30,20 @@ type CreateTodoRes struct {
 //	@Tags			todos
 //	@Accept			json
 //	@Produce		json
-//	@Param			message	body		CreateTodoReq	true	"Account Info"
-//	@Success		200	{object}	CreateTodoRes "Success"
+//	@Param			message	body		createTodoReq	true	"Create to-do req"
+//	@Success		200	{object}	createTodoRes "Success"
 //	@Failure		400		{object}	responseApi.Response			"Error"
 //	@Failure		500		{object}	responseApi.Response			"Error"
 //	@Router			/todos [post]
-func (t *TodoHandler) CreateTodoHandler(ctx *gin.Context) {
-	const op = "handlers.todos.create.New"
+func (t *TodoHandler) createTodoHandler(ctx *gin.Context) {
+	const op = "handlers.todos.CreateTodoHandler"
 
 	log := t.Log.With(
 		slog.String("operation", op),
 		slog.String("request_id", requestid.Get(ctx)),
 	)
 
-	var req CreateTodoReq
+	var req createTodoReq
 
 	if err := ctx.ShouldBind(&req); err != nil {
 		log.Error("failed to bind the body", sl.Err(err))
@@ -66,7 +66,7 @@ func (t *TodoHandler) CreateTodoHandler(ctx *gin.Context) {
 		return
 	}
 
-	_, err := t.uCase.CreateTodo(req.Title, req.Description)
+	_, err := t.UCase.CreateTodo(req.Title, req.Description)
 	if errors.Is(err, storage.ErrAlreadyExists) {
 		log.Error("todo already exists", sl.Err(err))
 
@@ -88,7 +88,7 @@ func (t *TodoHandler) CreateTodoHandler(ctx *gin.Context) {
 }
 
 func responseCreated(ctx *gin.Context, title string, description string) {
-	ctx.IndentedJSON(http.StatusCreated, CreateTodoRes{
+	ctx.IndentedJSON(http.StatusCreated, createTodoRes{
 		Response:    responseApi.Ok(),
 		Title:       title,
 		Description: description,

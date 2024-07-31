@@ -3,6 +3,7 @@ package app
 import (
 	"errors"
 	"github.com/eclipsemode/go-todo-app/internal/config"
+	"github.com/eclipsemode/go-todo-app/internal/lib/logger/sl"
 	"github.com/eclipsemode/go-todo-app/internal/storage/sqlite"
 	"github.com/eclipsemode/logger-pretty"
 	"log/slog"
@@ -23,7 +24,9 @@ func NewApp() (*App, error) {
 
 	storage, err := sqlite.New(conf.StoragePath)
 	if err != nil {
-		return nil, errors.New("failed to initialize storage")
+		log.Error("failed to init storage", sl.Err(err))
+
+		return nil, err
 	}
 
 	app := &App{

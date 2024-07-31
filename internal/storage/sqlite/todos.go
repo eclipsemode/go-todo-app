@@ -13,6 +13,7 @@ type TodoRepo interface {
 	GetAllTodos() ([]models.Todo, error)
 	GetTodoById(id string) (models.Todo, error)
 	DeleteTodoById(id string) error
+	UpdateTodoById(id uuidv4.UUID, title string, description string) (uuidv4.UUID, error)
 }
 
 // CreateTodo creates new element in storage
@@ -75,7 +76,7 @@ func (s *Storage) GetAllTodos() ([]models.Todo, error) {
 }
 
 func (s *Storage) GetTodoById(id string) (models.Todo, error) {
-	const op = "storage.sqlite.GetTodo"
+	const op = "storage.sqlite.GetTodoById"
 
 	stmt, err := s.db.Prepare("SELECT * FROM todos WHERE id=?")
 	if err != nil {
@@ -101,7 +102,7 @@ func (s *Storage) GetTodoById(id string) (models.Todo, error) {
 }
 
 func (s *Storage) DeleteTodoById(id string) error {
-	const op = "storage.sqlite.DeleteTodo"
+	const op = "storage.sqlite.DeleteTodoById"
 
 	stmt, err := s.db.Prepare("DELETE FROM todos WHERE id=?")
 	if err != nil {
@@ -120,4 +121,27 @@ func (s *Storage) DeleteTodoById(id string) error {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 	return nil
+}
+
+func (s *Storage) UpdateTodoById(id uuidv4.UUID, title string, description string) (uuidv4.UUID, error) {
+	const op = "storage.sqlite.UpdateTodoById"
+
+	stmt, err := s.db.Prepare("UPDATE todos SET title=?, description=? WHERE id=?")
+	if err != nil {
+		return uuidv4.UUID{}, fmt.Errorf("%s: %w", op, err)
+	}
+
+	defer func() {
+		if err := stmt.Close(); err != nil {
+			fmt.Printf("%s: %s\n", op, err)
+			return
+		}
+	}()
+
+	_, err = stmt.Exec(title, description, id)
+	if err != nil {
+		return uuidv4.UUID{}, fmt.Errorf("%s: %w", op, err)
+	}
+
+	return id, nil
 }

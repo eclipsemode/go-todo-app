@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-type GetAllTodosRes struct {
+type getAllTodosRes struct {
 	responseApi.Response
 	Todos []models.Todo `json:"todos"`
 }
@@ -22,11 +22,11 @@ type GetAllTodosRes struct {
 //	@Tags			todos
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{object}	GetAllTodosRes "Success"
+//	@Success		200	{object}	getAllTodosRes "Success"
 //	@Failure		400		{object}	responseApi.Response			"Error"
 //	@Failure		500		{object}	responseApi.Response			"Error"
 //	@Router			/todos [get]
-func (t *TodoHandler) GetAllTodosHandler(ctx *gin.Context) {
+func (t *TodoHandler) getAllTodosHandler(ctx *gin.Context) {
 	const op = "handlers.todos.getAllTodosHandler"
 
 	log := t.Log.With(
@@ -34,7 +34,7 @@ func (t *TodoHandler) GetAllTodosHandler(ctx *gin.Context) {
 		slog.String("request_id", requestid.Get(ctx)),
 	)
 
-	todos, err := t.uCase.GetAllTodos()
+	todos, err := t.UCase.GetAllTodos()
 	if err != nil {
 		log.Error("error getting todos", sl.Err(err))
 
@@ -49,7 +49,7 @@ func (t *TodoHandler) GetAllTodosHandler(ctx *gin.Context) {
 }
 
 func responseGetAllTodos(ctx *gin.Context, todos []models.Todo) {
-	ctx.IndentedJSON(http.StatusOK, GetAllTodosRes{
+	ctx.IndentedJSON(http.StatusOK, getAllTodosRes{
 		Response: responseApi.Ok(),
 		Todos:    todos,
 	})

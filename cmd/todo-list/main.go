@@ -4,7 +4,7 @@ import (
 	_ "github.com/eclipsemode/go-todo-app/docs"
 	"github.com/eclipsemode/go-todo-app/internal/app"
 	"github.com/joho/godotenv"
-	logDefault "log"
+	"log"
 )
 
 // @title List to do API
@@ -28,19 +28,19 @@ import (
 // @externalDocs.url https://swagger.io/resources/open-api/
 func main() {
 	if err := godotenv.Load(); err != nil {
-		logDefault.Fatal("Error loading .env file")
+		log.Fatal("Error loading .env file")
 	}
 
 	initApp()
 
 	a, err := app.GetGlobalApp()
 	if err != nil {
-		logDefault.Fatal("Error getting global app")
+		log.Fatal("Error getting global app")
 	}
 
 	err = a.StartHttpServer()
 	if err != nil {
-		logDefault.Fatal("Error starting http server")
+		log.Fatal("Error starting http server")
 	}
 }
 

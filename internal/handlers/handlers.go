@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/eclipsemode/go-todo-app/internal/handlers/todos"
+	"github.com/eclipsemode/go-todo-app/internal/handlers/http/api/todos"
 	"github.com/eclipsemode/go-todo-app/internal/lib/logger/sl"
 	"github.com/eclipsemode/go-todo-app/internal/storage/sqlite"
 	"github.com/gin-gonic/gin"

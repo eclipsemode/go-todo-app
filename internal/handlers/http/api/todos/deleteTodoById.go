@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-type DeleteTodoByIdRes struct {
+type deleteTodoByIdRes struct {
 	responseApi.Response
 }
 
@@ -25,7 +25,7 @@ type DeleteTodoByIdRes struct {
 //	@Failure		400		{object}	responseApi.Response			"Error"
 //	@Failure		500		{object}	responseApi.Response			"Error"
 //	@Router			/todos/{id} [delete]
-func (t *TodoHandler) DeleteTodoById(ctx *gin.Context) {
+func (t *TodoHandler) deleteTodoById(ctx *gin.Context) {
 	const op = "handlers.todos.DeleteTodoById"
 
 	id := ctx.Param("id")
@@ -35,7 +35,7 @@ func (t *TodoHandler) DeleteTodoById(ctx *gin.Context) {
 		slog.String("request_id", requestid.Get(ctx)),
 	)
 
-	err := t.uCase.DeleteTodoById(id)
+	err := t.UCase.DeleteTodoById(id)
 	if err != nil {
 		log.Error("cannot delete todo", sl.Err(err))
 
@@ -50,7 +50,7 @@ func (t *TodoHandler) DeleteTodoById(ctx *gin.Context) {
 }
 
 func responseDeleteTodoById(ctx *gin.Context) {
-	ctx.IndentedJSON(http.StatusNoContent, DeleteTodoByIdRes{
+	ctx.IndentedJSON(http.StatusNoContent, deleteTodoByIdRes{
 		Response: responseApi.Ok(),
 	})
 }

@@ -1,8 +1,9 @@
-package uc_todos
+package ucTodos
 
 import (
 	"github.com/eclipsemode/go-todo-app/internal/domain/models"
 	"github.com/eclipsemode/go-todo-app/internal/storage/sqlite"
+	"github.com/google/uuid"
 )
 
 type Usecase struct {
@@ -27,4 +28,8 @@ func (uc *Usecase) GetTodoById(id string) (models.Todo, error) {
 
 func (uc *Usecase) DeleteTodoById(id string) error {
 	return uc.Repo.DeleteTodoById(id)
+}
+
+func (uc *Usecase) UpdateTodoById(id uuid.UUID, title string, description string) (uuid.UUID, error) {
+	return uc.Repo.UpdateTodoById(id, title, description)
 }

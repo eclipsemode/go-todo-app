@@ -20,7 +20,7 @@ definitions:
       status:
         type: string
     type: object
-  todos.CreateTodoReq:
+  todos.createTodoReq:
     properties:
       description:
         maxLength: 100
@@ -31,7 +31,7 @@ definitions:
     required:
     - title
     type: object
-  todos.CreateTodoRes:
+  todos.createTodoRes:
     properties:
       description:
         type: string
@@ -42,7 +42,7 @@ definitions:
       title:
         type: string
     type: object
-  todos.GetAllTodosRes:
+  todos.getAllTodosRes:
     properties:
       error:
         type: string
@@ -53,7 +53,7 @@ definitions:
           $ref: '#/definitions/models.Todo'
         type: array
     type: object
-  todos.GetTodoRes:
+  todos.getTodoRes:
     properties:
       error:
         type: string
@@ -61,6 +61,30 @@ definitions:
         type: string
       todo:
         $ref: '#/definitions/models.Todo'
+    type: object
+  todos.updateTodoReq:
+    properties:
+      description:
+        maxLength: 100
+        type: string
+      title:
+        maxLength: 20
+        type: string
+    required:
+    - title
+    type: object
+  todos.updateTodoRes:
+    properties:
+      description:
+        type: string
+      error:
+        type: string
+      id:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
     type: object
 externalDocs:
   description: OpenAPI
@@ -89,7 +113,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/todos.GetAllTodosRes'
+            $ref: '#/definitions/todos.getAllTodosRes'
         "400":
           description: Error
           schema:
@@ -106,19 +130,19 @@ paths:
       - application/json
       description: create to-do
       parameters:
-      - description: Account Info
+      - description: Create to-do req
         in: body
         name: message
         required: true
         schema:
-          $ref: '#/definitions/todos.CreateTodoReq'
+          $ref: '#/definitions/todos.createTodoReq'
       produces:
       - application/json
       responses:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/todos.CreateTodoRes'
+            $ref: '#/definitions/todos.createTodoRes'
         "400":
           description: Error
           schema:
@@ -173,7 +197,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/todos.GetTodoRes'
+            $ref: '#/definitions/todos.getTodoRes'
         "400":
           description: Error
           schema:
@@ -183,6 +207,40 @@ paths:
           schema:
             $ref: '#/definitions/responseApi.Response'
       summary: Get To-do by id
+      tags:
+      - todos
+    put:
+      consumes:
+      - application/json
+      description: update to-do by id
+      parameters:
+      - description: Update to-do req
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/todos.updateTodoReq'
+      - description: Todos id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/todos.updateTodoRes'
+        "400":
+          description: Error
+          schema:
+            $ref: '#/definitions/responseApi.Response'
+        "500":
+          description: Error
+          schema:
+            $ref: '#/definitions/responseApi.Response'
+      summary: Update To-do by id
       tags:
       - todos
 securityDefinitions:

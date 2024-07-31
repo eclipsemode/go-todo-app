@@ -40,7 +40,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/todos.GetAllTodosRes"
+                            "$ref": "#/definitions/todos.getAllTodosRes"
                         }
                     },
                     "400": {
@@ -71,12 +71,12 @@ const docTemplate = `{
                 "summary": "Create to-do post method",
                 "parameters": [
                     {
-                        "description": "Account Info",
+                        "description": "Create to-do req",
                         "name": "message",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/todos.CreateTodoReq"
+                            "$ref": "#/definitions/todos.createTodoReq"
                         }
                     }
                 ],
@@ -84,7 +84,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/todos.CreateTodoRes"
+                            "$ref": "#/definitions/todos.createTodoRes"
                         }
                     },
                     "400": {
@@ -128,7 +128,58 @@ const docTemplate = `{
                     "200": {
                         "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/todos.GetTodoRes"
+                            "$ref": "#/definitions/todos.getTodoRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/responseApi.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/responseApi.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "update to-do by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "todos"
+                ],
+                "summary": "Update To-do by id",
+                "parameters": [
+                    {
+                        "description": "Update to-do req",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/todos.updateTodoReq"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Todos id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/todos.updateTodoRes"
                         }
                     },
                     "400": {
@@ -218,7 +269,7 @@ const docTemplate = `{
                 }
             }
         },
-        "todos.CreateTodoReq": {
+        "todos.createTodoReq": {
             "type": "object",
             "required": [
                 "title"
@@ -234,7 +285,7 @@ const docTemplate = `{
                 }
             }
         },
-        "todos.CreateTodoRes": {
+        "todos.createTodoRes": {
             "type": "object",
             "properties": {
                 "description": {
@@ -251,7 +302,7 @@ const docTemplate = `{
                 }
             }
         },
-        "todos.GetAllTodosRes": {
+        "todos.getAllTodosRes": {
             "type": "object",
             "properties": {
                 "error": {
@@ -268,7 +319,7 @@ const docTemplate = `{
                 }
             }
         },
-        "todos.GetTodoRes": {
+        "todos.getTodoRes": {
             "type": "object",
             "properties": {
                 "error": {
@@ -279,6 +330,42 @@ const docTemplate = `{
                 },
                 "todo": {
                     "$ref": "#/definitions/models.Todo"
+                }
+            }
+        },
+        "todos.updateTodoReq": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 20
+                }
+            }
+        },
+        "todos.updateTodoRes": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "error": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
                 }
             }
         }
