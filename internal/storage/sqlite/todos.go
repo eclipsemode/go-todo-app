@@ -7,7 +7,7 @@ import (
 	uuidv4 "github.com/google/uuid"
 )
 
-//go:generate mockery --name TodoService
+//go:generate mockery --name TodoRepo
 type TodoRepo interface {
 	CreateTodo(title string, description string) (string, error)
 	GetAllTodos() ([]models.Todo, error)
