@@ -42,6 +42,8 @@ func main() {
 	if err != nil {
 		log.Fatal("Error starting http server")
 	}
+
+	// test row
 }
 
 func initApp() {
